@@ -6,16 +6,28 @@
 
     public class HomeControllerTests
     {
+        private readonly HomeController _homeController;
+        public HomeControllerTests()
+        {
+            _homeController = new HomeController();
+        }
+
         [Fact]
         public void HomeController_ShouldReturn_View()
         {
-            // arrange
-            var controller = new HomeController();
 
             // act 
-            var result = controller.Index();
+            var result = _homeController.Index();
 
             //asset
+            Assert.IsType<ViewResult>(result);
+        }
+
+        [Fact]
+        public void Privacy_ShouldReturn_View()
+        {
+            var result = _homeController.Privacy();
+
             Assert.IsType<ViewResult>(result);
         }
     }
