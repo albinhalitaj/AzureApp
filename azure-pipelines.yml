@@ -1,11 +1,15 @@
 trigger:
 - main
 
+resources: 
+- repo: self
+
 pool:
   vmImage: ubuntu-latest
 
 variables:
   buildConfiguration: 'Release'
+  tag: '$(Build.BuildId)'
 
 steps:
 
@@ -22,17 +26,15 @@ steps:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: Publish
-  inputs: 
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
     
-- task: PublishPipelineArtifact@1
-  displayName: Artifact
+
+- task: Docker@2
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'AzureApp'
+    containerRegistry: 'acr-connection'
+    repository: 'azureapp'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    buildContext: $(Build.Repository.LocalPath)
+    tags: |
+      $(tag)
+      latest
