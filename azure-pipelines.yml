@@ -9,7 +9,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  tag: '$(Build.BuildId)'
+  tag: 'latest'
 
 steps:
 
@@ -35,6 +35,4 @@ steps:
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
     buildContext: $(Build.Repository.LocalPath)
-    tags: |
-      $(tag)
-      latest
+    tags: $(tag)
